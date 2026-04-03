@@ -1766,6 +1766,7 @@ section {
 
     // === PROPOSAL RESPONSE FORM (Formspree) ===
     (function() {
+        var FORMSPREE_URL = 'https://formspree.io/f/xaqdalby';
         var FALLBACK_EMAIL = 'alex@kamehamedia.com';
         var CLIENT_NAME = 'Restoration Medics FL';
 
@@ -1782,13 +1783,29 @@ section {
         // Accept
         acceptBtn.addEventListener('click', function() {
             if (acceptBtn.classList.contains('sent')) return;
-            window.location.href = 'mailto:' + FALLBACK_EMAIL +
-                '?subject=' + encodeURIComponent(CLIENT_NAME + ' - Proposal Accepted') +
-                '&body=' + encodeURIComponent('Hi Alex,\n\nWe would like to move forward with the proposal.\n\nBest,\nJianni Acosta\nRestoration Medics FL');
-            acceptBtn.textContent = 'Proposal Accepted';
-            acceptBtn.classList.add('sent');
-            acceptBtn.classList.remove('cta-pulse');
-            acceptConfirm.classList.add('visible');
+            acceptBtn.textContent = 'Sending...';
+
+            fetch(FORMSPREE_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+                body: JSON.stringify({
+                    _subject: CLIENT_NAME + ' Proposal - ACCEPTED',
+                    message: CLIENT_NAME + ' has accepted the proposal.',
+                    source: 'restoration-medics-proposal',
+                    type: 'acceptance'
+                })
+            }).then(function(res) {
+                if (res.ok) {
+                    acceptBtn.textContent = 'Proposal Accepted';
+                    acceptBtn.classList.add('sent');
+                    acceptBtn.classList.remove('cta-pulse');
+                    acceptConfirm.classList.add('visible');
+                }
+            }).catch(function() {
+                window.location.href = 'mailto:' + FALLBACK_EMAIL +
+                    '?subject=' + encodeURIComponent(CLIENT_NAME + ' - Proposal Accepted') +
+                    '&body=' + encodeURIComponent('Hi Alex,\n\nWe would like to move forward with the proposal.\n\n');
+            });
         });
 
         // Revision toggle
@@ -1807,14 +1824,31 @@ section {
         // Send revision
         sendRevisionBtn.addEventListener('click', function() {
             if (!revisionMsg.value.trim() || sendRevisionBtn.disabled) return;
-            window.location.href = 'mailto:' + FALLBACK_EMAIL +
-                '?subject=' + encodeURIComponent(CLIENT_NAME + ' - Revision Request') +
-                '&body=' + encodeURIComponent(revisionMsg.value);
-            revisionForm.classList.remove('open');
-            revisionConfirm.classList.add('visible');
-            revisionBtn.textContent = 'Revision Sent';
-            revisionBtn.classList.add('active');
-            revisionBtn.style.pointerEvents = 'none';
+            sendRevisionBtn.textContent = 'Sending...';
+            sendRevisionBtn.disabled = true;
+
+            fetch(FORMSPREE_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+                body: JSON.stringify({
+                    _subject: CLIENT_NAME + ' Proposal - Revision Request',
+                    message: revisionMsg.value,
+                    source: 'restoration-medics-proposal',
+                    type: 'revision'
+                })
+            }).then(function(res) {
+                if (res.ok) {
+                    revisionForm.classList.remove('open');
+                    revisionConfirm.classList.add('visible');
+                    revisionBtn.textContent = 'Revision Sent';
+                    revisionBtn.classList.add('active');
+                    revisionBtn.style.pointerEvents = 'none';
+                }
+            }).catch(function() {
+                window.location.href = 'mailto:' + FALLBACK_EMAIL +
+                    '?subject=' + encodeURIComponent(CLIENT_NAME + ' - Proposal Questions') +
+                    '&body=' + encodeURIComponent(revisionMsg.value);
+            });
         });
     })();
 
