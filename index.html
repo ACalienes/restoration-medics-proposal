@@ -236,6 +236,73 @@ section {
 }
 .hero-footer img { height: 28px; }
 
+/* Scroll indicator */
+.scroll-indicator {
+    position: absolute; bottom: 2rem; left: 50%;
+    transform: translateX(-50%); opacity: 0;
+    animation: fadeUp 0.7s ease 1.8s forwards;
+    display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+}
+.scroll-indicator span {
+    font-size: 0.65rem; font-weight: 600; letter-spacing: 0.2em;
+    text-transform: uppercase; color: rgba(255,255,255,0.3);
+}
+.scroll-indicator::after {
+    content: ''; width: 1px; height: 28px;
+    background: linear-gradient(180deg, rgba(197,165,90,0.6), transparent);
+    animation: scrollPulse 2s ease-in-out infinite;
+}
+@keyframes scrollPulse {
+    0%, 100% { opacity: 0.3; transform: scaleY(0.6); }
+    50% { opacity: 1; transform: scaleY(1); }
+}
+
+/* Back to top */
+.back-to-top {
+    position: fixed; bottom: 2rem; right: 2rem; z-index: 900;
+    width: 44px; height: 44px; border-radius: 50%;
+    border: 1px solid var(--border-medium);
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    opacity: 0; visibility: hidden; transform: translateY(10px);
+    transition: all 0.3s ease; box-shadow: var(--shadow-sm);
+}
+.back-to-top.visible { opacity: 1; visibility: visible; transform: translateY(0); }
+.back-to-top:hover {
+    background: var(--bg-primary); box-shadow: var(--shadow-md);
+    border-color: var(--accent-pop);
+}
+.back-to-top::before {
+    content: ''; width: 10px; height: 10px;
+    border-left: 2px solid var(--text-muted);
+    border-top: 2px solid var(--text-muted);
+    transform: rotate(45deg) translate(1px, 1px);
+    transition: border-color 0.3s ease;
+}
+.back-to-top:hover::before { border-color: var(--accent-pop); }
+
+/* Beyond the Expo cards */
+.beyond-card {
+    padding: 1.25rem; border: 1px solid var(--border-light);
+    border-radius: 10px; background: var(--bg-card);
+    transition: all 0.3s ease;
+}
+.beyond-card:hover {
+    background: var(--navy-dark); border-color: var(--navy-dark);
+    transform: translateY(-3px); box-shadow: var(--shadow-lg);
+}
+.beyond-card-title {
+    font-size: 0.9rem; font-weight: 700; color: var(--text-primary);
+    margin-bottom: 0.35rem; transition: color 0.3s ease;
+}
+.beyond-card:hover .beyond-card-title { color: var(--accent-pop); }
+.beyond-card-desc {
+    font-size: 0.85rem; color: var(--text-muted); line-height: 1.6;
+    transition: color 0.3s ease;
+}
+.beyond-card:hover .beyond-card-desc { color: rgba(255,255,255,0.7); }
+
 /* ══════════════════════════════════════════════════════════════
    SECTION BACKGROUND IMAGES
    ══════════════════════════════════════════════════════════════ */
@@ -258,9 +325,12 @@ section {
 .expandable { border-bottom: 1px solid var(--border-light); }
 .expandable-header {
     display: flex; justify-content: space-between; align-items: center;
-    padding: 1.25rem 0; cursor: pointer; user-select: none;
-    transition: color 0.3s ease;
+    padding: 1.25rem 0; padding-left: 0;
+    cursor: pointer; user-select: none;
+    transition: all 0.3s ease;
+    border-left: 3px solid transparent; margin-left: -1rem; padding-left: 1rem;
 }
+.expandable-header:hover { border-left-color: var(--accent-pop); }
 .expandable-header:hover .expandable-title { color: var(--accent-pop); }
 .expandable-title { font-size: 1.05rem; font-weight: 600; transition: color 0.3s ease; }
 .expandable-icon {
@@ -269,6 +339,7 @@ section {
     align-items: center; justify-content: center; font-size: 1.1rem;
     color: var(--text-muted); transition: all 0.3s ease; flex-shrink: 0;
 }
+.expandable-header:hover .expandable-icon { border-color: var(--accent-pop); color: var(--accent-pop); }
 .expandable.open .expandable-icon { transform: rotate(45deg); color: var(--accent-pop); border-color: var(--accent-pop); }
 .expandable-content {
     max-height: 0; overflow: hidden;
@@ -289,14 +360,20 @@ section {
     content: ''; position: absolute; left: 0; top: 0;
     width: 2px; height: 100%; background: rgba(255,255,255,0.15);
 }
-.timeline-item { position: relative; margin-bottom: 2.5rem; padding-left: 1.5rem; }
+.timeline-item {
+    position: relative; margin-bottom: 2.5rem; padding-left: 1.5rem;
+    transition: transform 0.3s ease;
+}
 .timeline-item:last-child { margin-bottom: 0; }
+.timeline-item:hover { transform: translateX(6px); }
 .timeline-item::before {
     content: ''; position: absolute; left: -2rem; top: 0.35rem;
     width: 12px; height: 12px; border-radius: 50%;
     background: var(--accent-pop); border: 3px solid var(--navy-dark);
     z-index: 1; box-shadow: 0 0 8px rgba(197,165,90,0.3);
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
 }
+.timeline-item:hover::before { box-shadow: 0 0 16px rgba(197,165,90,0.6); transform: scale(1.3); }
 .timeline-phase {
     font-size: 0.7rem; font-weight: 600; letter-spacing: 0.15em;
     text-transform: uppercase; color: var(--accent-pop); margin-bottom: 0.25rem;
@@ -370,13 +447,17 @@ section {
     padding: 0.65rem 0; border-bottom: 1px solid var(--border-light);
     font-size: 0.95rem; color: var(--text-secondary);
     display: flex; align-items: flex-start; gap: 0.75rem;
+    transition: padding-left 0.3s ease, color 0.3s ease;
 }
+.investment-includes li:hover { padding-left: 0.5rem; color: var(--text-primary); }
 .investment-includes li::before {
     content: '';
     width: 6px; height: 6px; border-radius: 50%;
     background: var(--accent-success);
     flex-shrink: 0; margin-top: 0.55rem;
+    transition: background 0.3s ease, transform 0.3s ease;
 }
+.investment-includes li:hover::before { background: var(--accent-pop); transform: scale(1.4); }
 
 /* Add-ons */
 .addons { max-width: 600px; margin: 2.5rem auto 0; }
@@ -388,8 +469,12 @@ section {
 .addon-item {
     display: flex; justify-content: space-between; align-items: center;
     padding: 1rem 0; border-bottom: 1px solid var(--border-light);
+    transition: padding-left 0.3s ease, background 0.3s ease;
+    border-radius: 6px; margin: 0 -0.5rem; padding-left: 0.5rem; padding-right: 0.5rem;
 }
-.addon-name { font-size: 0.95rem; color: var(--text-primary); font-weight: 500; }
+.addon-item:hover { background: var(--bg-secondary); padding-left: 1rem; }
+.addon-name { font-size: 0.95rem; color: var(--text-primary); font-weight: 500; transition: color 0.3s ease; }
+.addon-item:hover .addon-name { color: var(--accent-primary); }
 .addon-price { font-size: 0.95rem; color: var(--accent-pop); font-weight: 600; }
 
 /* Payment Terms */
@@ -407,11 +492,14 @@ section {
 }
 .payment-terms .term-row {
     display: flex; justify-content: space-between; align-items: center;
-    padding: 0.5rem 0; border-bottom: 1px solid var(--border-light);
+    padding: 0.5rem 0.5rem; border-bottom: 1px solid var(--border-light);
+    border-radius: 6px; transition: background 0.3s ease;
 }
+.payment-terms .term-row:hover { background: rgba(197,165,90,0.06); }
 .payment-terms .term-row:last-child { border-bottom: none; }
 .term-label { font-size: 0.9rem; color: var(--text-secondary); }
-.term-value { font-size: 0.9rem; font-weight: 600; color: var(--text-primary); }
+.term-value { font-size: 0.9rem; font-weight: 600; color: var(--text-primary); transition: color 0.3s ease; }
+.payment-terms .term-row:hover .term-value { color: var(--accent-pop); }
 
 /* ══════════════════════════════════════════════════════════════
    EXCLUSIONS
@@ -428,12 +516,15 @@ section {
 .exclusions-list li {
     font-size: 0.85rem; color: var(--text-muted);
     padding: 0.35rem 0; padding-left: 1.25rem; position: relative;
-    break-inside: avoid;
+    break-inside: avoid; transition: color 0.3s ease;
 }
+.exclusions-list li:hover { color: var(--text-secondary); }
 .exclusions-list li::before {
     content: ''; position: absolute; left: 0; top: 0.6rem;
     width: 6px; height: 1px; background: var(--text-light);
+    transition: width 0.3s ease, background 0.3s ease;
 }
+.exclusions-list li:hover::before { width: 10px; background: var(--accent-pop); }
 
 /* ══════════════════════════════════════════════════════════════
    CTA SECTION
@@ -694,6 +785,7 @@ section {
     .animate { opacity: 1; }
     .hero-client-logo, .hero-eyebrow, .hero-title,
     .hero-subtitle, .hero-divider, .hero-footer { opacity: 1; }
+    .scroll-indicator { display: none; }
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -777,6 +869,7 @@ section {
             <span>&middot; April 2026</span>
         </div>
     </div>
+    <div class="scroll-indicator"><span>Scroll</span></div>
 </section>
 
 <!-- ═══════════════════════════════════════════════════════════
@@ -1021,29 +1114,29 @@ section {
                 The footage from production day is designed to work far beyond a single event. One shoot fuels every channel you operate in today, and the ones you grow into next.
             </p>
             <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem">
-                <div style="padding:1.25rem;border:1px solid var(--border-light);border-radius:10px;background:var(--bg-card)">
-                    <p style="font-size:0.9rem;font-weight:700;color:var(--text-primary);margin-bottom:0.35rem">Website</p>
-                    <p style="font-size:0.85rem;color:var(--text-muted);line-height:1.6">Embed on your homepage to build trust before the first phone call.</p>
+                <div class="beyond-card">
+                    <p class="beyond-card-title">Website</p>
+                    <p class="beyond-card-desc">Embed on your homepage to build trust before the first phone call.</p>
                 </div>
-                <div style="padding:1.25rem;border:1px solid var(--border-light);border-radius:10px;background:var(--bg-card)">
-                    <p style="font-size:0.9rem;font-weight:700;color:var(--text-primary);margin-bottom:0.35rem">Social Media</p>
-                    <p style="font-size:0.85rem;color:var(--text-muted);line-height:1.6">Cut interview sections into 30-60 second clips for Instagram, LinkedIn, and TikTok.</p>
+                <div class="beyond-card">
+                    <p class="beyond-card-title">Social Media</p>
+                    <p class="beyond-card-desc">Cut interview sections into 30-60 second clips for Instagram, LinkedIn, and TikTok.</p>
                 </div>
-                <div style="padding:1.25rem;border:1px solid var(--border-light);border-radius:10px;background:var(--bg-card)">
-                    <p style="font-size:0.9rem;font-weight:700;color:var(--text-primary);margin-bottom:0.35rem">Practitioner Outreach</p>
-                    <p style="font-size:0.85rem;color:var(--text-muted);line-height:1.6">Send to functional medicine practitioners and IEPs as part of your referral pipeline.</p>
+                <div class="beyond-card">
+                    <p class="beyond-card-title">Practitioner Outreach</p>
+                    <p class="beyond-card-desc">Send to functional medicine practitioners and IEPs as part of your referral pipeline.</p>
                 </div>
-                <div style="padding:1.25rem;border:1px solid var(--border-light);border-radius:10px;background:var(--bg-card)">
-                    <p style="font-size:0.9rem;font-weight:700;color:var(--text-primary);margin-bottom:0.35rem">BNI and Networking</p>
-                    <p style="font-size:0.85rem;color:var(--text-muted);line-height:1.6">Replace slides with a video that speaks for you at presentations and one-on-ones.</p>
+                <div class="beyond-card">
+                    <p class="beyond-card-title">BNI and Networking</p>
+                    <p class="beyond-card-desc">Replace slides with a video that speaks for you at presentations and one-on-ones.</p>
                 </div>
-                <div style="padding:1.25rem;border:1px solid var(--border-light);border-radius:10px;background:var(--bg-card)">
-                    <p style="font-size:0.9rem;font-weight:700;color:var(--text-primary);margin-bottom:0.35rem">Future Content</p>
-                    <p style="font-size:0.85rem;color:var(--text-muted);line-height:1.6">Raw footage and b-roll become source material for future campaigns, reels, and marketing assets.</p>
+                <div class="beyond-card">
+                    <p class="beyond-card-title">Future Content</p>
+                    <p class="beyond-card-desc">Raw footage and b-roll become source material for future campaigns, reels, and marketing assets.</p>
                 </div>
-                <div style="padding:1.25rem;border:1px solid var(--border-light);border-radius:10px;background:var(--bg-card)">
-                    <p style="font-size:0.9rem;font-weight:700;color:var(--text-primary);margin-bottom:0.35rem">Email Campaigns</p>
-                    <p style="font-size:0.85rem;color:var(--text-muted);line-height:1.6">Embed video links in outreach emails. A video says more than a brochure ever will.</p>
+                <div class="beyond-card">
+                    <p class="beyond-card-title">Email Campaigns</p>
+                    <p class="beyond-card-desc">Embed video links in outreach emails. A video says more than a brochure ever will.</p>
                 </div>
             </div>
             <p style="font-size:0.85rem;color:var(--text-muted);margin-top:1.5rem;text-align:center;font-style:italic">
@@ -1172,6 +1265,9 @@ section {
     </div>
 </section>
 
+<!-- ═══ BACK TO TOP ═══ -->
+<button class="back-to-top" id="backToTop" aria-label="Back to top"></button>
+
 <!-- ═══ FOOTER ═══ -->
 <div class="footer">
     <p class="footer-brand"><img src="kameha-logo.png" alt="Kameha Media Group" height="14" style="opacity:0.5;vertical-align:middle"></p>
@@ -1228,6 +1324,17 @@ section {
             if (scrollTop > 50) { nav.classList.add('scrolled'); }
             else { nav.classList.remove('scrolled'); }
 
+            // Back to top visibility
+            var btt = document.getElementById('backToTop');
+            if (btt) {
+                if (scrollTop > window.innerHeight) btt.classList.add('visible');
+                else btt.classList.remove('visible');
+            }
+
+            // Fade scroll indicator
+            var si = document.querySelector('.scroll-indicator');
+            if (si) { si.style.opacity = scrollTop > 100 ? '0' : ''; }
+
             var current = 0;
             sections.forEach(function(section, i) {
                 var rect = section.getBoundingClientRect();
@@ -1267,6 +1374,12 @@ section {
             if (p < 1) requestAnimationFrame(step);
         }
         requestAnimationFrame(step);
+    }
+
+    // === BACK TO TOP ===
+    var backToTop = document.getElementById('backToTop');
+    if (backToTop) {
+        backToTop.addEventListener('click', function() { scrollToSection(0); });
     }
 
     // === KEYBOARD NAVIGATION ===
