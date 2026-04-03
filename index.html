@@ -83,7 +83,7 @@ p, .timeline-desc, .expandable-content-inner, .closing-text p { text-wrap: prett
 }
 .loading-overlay.fade-out { opacity: 0; visibility: hidden; }
 .loading-logo {
-    height: 24px; width: auto;
+    height: 120px; width: auto;
     opacity: 0;
     animation: logoReveal 1.4s var(--transition-smooth) forwards;
 }
@@ -229,10 +229,12 @@ section {
     animation: fadeUp 0.7s ease 1.2s forwards;
 }
 .hero-footer {
-    font-size: 0.8rem; color: rgba(255,255,255,0.4);
-    letter-spacing: 0.05em; opacity: 0;
+    font-size: 1rem; color: rgba(255,255,255,0.5);
+    letter-spacing: 0.06em; opacity: 0;
     animation: fadeUp 0.7s ease 1.4s forwards;
+    display: flex; align-items: center; justify-content: center; gap: 0.4rem;
 }
+.hero-footer img { height: 28px; }
 
 /* ══════════════════════════════════════════════════════════════
    SECTION BACKGROUND IMAGES
@@ -771,7 +773,7 @@ section {
         <div class="hero-divider"></div>
         <div class="hero-footer">
             <span>Prepared by</span>
-            <img src="kameha-logo-white.png" alt="Kameha Media Group" height="14" style="vertical-align:middle;margin:0 0.25rem;opacity:0.6">
+            <img src="kameha-logo-white.png" alt="Kameha Media Group" style="opacity:0.6">
             <span>&middot; April 2026</span>
         </div>
     </div>
